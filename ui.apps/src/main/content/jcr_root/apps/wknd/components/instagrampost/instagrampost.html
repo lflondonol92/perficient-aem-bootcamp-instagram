@@ -1,0 +1,11 @@
+<div data-sly-use.component="com.adobe.cq.wcm.core.components.models.Component"
+     data-sly-use.template="core/wcm/components/commons/v1/templates.html"
+     id="${component.id}"
+     data-url="${properties.url}"
+     class="cmp-instagram-post">
+    <h1>IG Post</h1>
+</div>
+<div class="cpm-instagram-post__products">
+</div>
+
+<sly data-sly-call="${template.placeholder @ isEmpty=!text, classAppend='cmp-title'}"></sly>
