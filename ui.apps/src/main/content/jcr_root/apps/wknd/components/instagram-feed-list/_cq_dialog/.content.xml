@@ -63,7 +63,7 @@
                                                 <field
                                                         jcr:primaryType="nt:unstructured"
                                                         sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
-                                                        name="./socialMediaChannels">
+                                                        name="./igPosts">
                                                     <items jcr:primaryType="nt:unstructured">
                                                         <igMediaUrl
                                                                 jcr:primaryType="nt:unstructured"
@@ -77,7 +77,7 @@
                                                                 deleteHint="{Boolean}true"
                                                                 text="Disable Instagram Post"
                                                                 fieldDescription="When checked, IG Post won't show."
-                                                                name="./igMediaisDisabled"
+                                                                name="./igMediaIsDisabled"
                                                                 value="{Boolean}true"/>
                                                     </items>
                                                 </field>

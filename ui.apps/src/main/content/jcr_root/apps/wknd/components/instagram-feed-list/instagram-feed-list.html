@@ -10,7 +10,10 @@
     </span>
     <ul data-sly-test.posts="${igfeedlist.posts}"
         data-sly-repeat.item="${posts}">
-        <li>${item}</li>
+        <li>
+            ${item.shortcode_media.id} - ${item.shortcode_media.shortcode}
+            <p><img src="${item.graphql.shortcode_media.display_url}"></p>
+        </li>
     </ul>
     <p>${media.responseText}</p>
 </div>

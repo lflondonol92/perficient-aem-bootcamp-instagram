@@ -1,23 +1,27 @@
 package com.adobe.aem.guides.wknd.core.models.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import com.adobe.aem.guides.wknd.core.models.InstagramFeedList;
+import com.adobe.aem.guides.wknd.core.models.dto.instagram.Graphql;
 import com.adobe.aem.guides.wknd.services.InstagramMediaService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.models.annotations.DefaultInjectionStrategy;
-import org.apache.sling.models.annotations.Model;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.models.annotations.*;
+import org.apache.sling.models.annotations.injectorspecific.ChildResource;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
-import org.apache.sling.models.annotations.injectorspecific.ScriptVariable;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.day.cq.wcm.api.Page;
 
 
 @Model(
@@ -39,25 +43,41 @@ public class InstagramFeedListImpl implements InstagramFeedList {
     @OSGiService
     private InstagramMediaService igMediaService;
 
-    @ScriptVariable
-    private Page currentPage;
+    @ChildResource @Via("resource") @Optional
+    protected Resource igPosts;
+
+    private List<Graphql> instagramPosts;
+
 
     @PostConstruct
     private void init() {
-        LOGGER.info("init component");
-        final String testUrl = "https://www.instagram.com/p/CNogcwMDand/";
-        JsonObject jsonObject = igMediaService.getPostByURI(testUrl);
-        LOGGER.info(jsonObject.toString());
-        LOGGER.info("finish component");
+        LOGGER.info("init InstagramFeedListImpl");
+        instagramPosts = new ArrayList<>();
+        Gson gson = new GsonBuilder().create();
+
+        if(igPosts != null && igPosts.hasChildren()){
+            Iterator<Resource> iterator = igPosts.getChildren().iterator();
+            while(iterator.hasNext()){
+                Resource igPostNode = iterator.next();
+                ValueMap properties = igPostNode.adaptTo(ValueMap.class);
+                Boolean isDisabled = BooleanUtils.toBooleanDefaultIfNull(properties.get("igMediaIsDisabled", Boolean.class),
+                        Boolean.FALSE);
+                if(!isDisabled){
+                    final String igMediaUrl = properties.get("igMediaUrl", String.class);
+                    JsonObject jsonObject = igMediaService.getPostByURI(igMediaUrl);
+                    Graphql graphql = gson.fromJson(jsonObject.get("graphql").toString(), Graphql.class);
+                    instagramPosts.add(graphql);
+                }
+            }
+        }
+
+        LOGGER.info("finish initialization");
     }
 
-    @Override public List<Object> getPosts() {
-        List<Object> emptyList = new ArrayList<>();
-        emptyList.add("1");
-        emptyList.add("2");
-        emptyList.add("3");
-        return emptyList;
+    @Override public List<Graphql> getPosts() {
+        return instagramPosts;
     }
+
 }
 
 
