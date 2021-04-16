@@ -6,7 +6,7 @@ jQuery(function ($) {
         const SELECTORS = {
             IG_COMPONENT : ".cmp-instagram-post",
         };
-        const token = "EAAC8ZCVnhe18BAEGZB32oXHABFuTpdOKTnIyTAVN3koYkI3XMMBRQATsIoLu01KIw5MOQk9bYGIAceq74qgKX5qzPxAVD9y75b8Dx0K3K6J1CXDrPxKsI8VYfR9HshxUh1JxFvsA6SfVjoRWH5KIMcZBuZBmxAo9hF2aZBqOJZAoO3N5sQgBQKDxzBCRCO1QqHDdU3cidgrA1h2tTbDGho";
+        const token = "EAAC8ZCVnhe18BAPaip5EAcQn5XZAkOZB4IbwZCjBSQlXxm0fmsPi1yZCCVDAnRQqVou66BlO8Hhanhb2ZAzKWyzK3TvnaR4CyThqQScKHA70ZAsgPoOd5lNeGSHOnpTSDNZBqTXG7CgFk92f0TjZAOxzfs63gZAnErZAgVETWL2mvZBoCZApgV049uKlW1WahaoZC9Y0EYdxl2yHCf20wcXeZBoBQZCKmaPz0SXduycobFt5W873keP5PaVpzASSfDXOotuMm3AZD";
         $(SELECTORS.IG_COMPONENT).each((_, item) => {
             if($(item).data()){
                 const url = $(item).data("url");

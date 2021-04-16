@@ -1,0 +1,18 @@
+<div data-sly-use.component="com.adobe.cq.wcm.core.components.models.Component"
+     data-sly-use.igfeedlist="com.adobe.aem.guides.wknd.core.models.InstagramFeedList"
+     data-sly-use.template="core/wcm/components/commons/v1/templates.html"
+     id="${component.id}"
+     class="cmp-instagram-list"
+     data-sly-use.media="media.js">
+    <h1>List</h1>
+    <span class="cmp-instagram-list__properties">
+        ${media.title}
+    </span>
+    <ul data-sly-test.posts="${igfeedlist.posts}"
+        data-sly-repeat.item="${posts}">
+        <li>${item}</li>
+    </ul>
+    <p>${media.responseText}</p>
+</div>
+
+<sly data-sly-call="${template.placeholder @ isEmpty=!properties.igMediaId, classAppend='cmp-instagram-list'}"></sly>
