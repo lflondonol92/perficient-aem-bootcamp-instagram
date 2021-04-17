@@ -4,17 +4,17 @@
      id="${component.id}"
      class="cmp-instagram-list"
      data-sly-use.media="media.js">
-    <h1>List</h1>
     <span class="cmp-instagram-list__properties">
         ${media.title}
     </span>
-    <ul data-sly-test.posts="${igfeedlist.posts}"
-        data-sly-repeat.item="${posts}">
-        <li>
-            ${item.shortcode_media.id} - ${item.shortcode_media.shortcode}
-            <p><img src="${item.graphql.shortcode_media.display_url}"></p>
-        </li>
-    </ul>
+    <div class="cmp-instagram-feeds"
+         data-sly-test.posts="${igfeedlist.posts}">
+        <div class="cmp-instagram-feeds__post"
+             data-sly-list.item="${posts}">
+            <img src="${item.shortcode_media.display_resources[0].src @ context='uri'}" >
+        </div>
+    </div>
+
     <p>${media.responseText}</p>
 </div>
 
