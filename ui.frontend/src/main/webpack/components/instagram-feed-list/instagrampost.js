@@ -2,7 +2,7 @@ var jQuery = require("jquery");
 
 jQuery(function ($) {
     "use strict";
-    function pullIgPost(){
+    /*function pullIgPost(){
         const SELECTORS = {
             IG_COMPONENT : ".cmp-instagram-post",
         };
@@ -22,10 +22,10 @@ jQuery(function ($) {
                 });
             }
         });
-    }
+    }*/
 
     $( document ).ready(function() {
-        pullIgPost();
+        console.log('ready...');
     });
 
 });

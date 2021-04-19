@@ -2,16 +2,16 @@
      data-sly-use.igfeedlist="com.adobe.aem.guides.wknd.core.models.InstagramFeedList"
      data-sly-use.template="core/wcm/components/commons/v1/templates.html"
      id="${component.id}"
-     class="cmp-instagram-list"
+     class="cmp-instagram"
      data-sly-use.media="media.js">
     <span class="cmp-instagram-list__properties">
         ${media.title}
     </span>
-    <div class="cmp-instagram-feeds"
+    <div class="cmp-instagram__layout cmp-instagram__layout--is-mixed"
          data-sly-test.posts="${igfeedlist.posts}">
-        <div class="cmp-instagram-feeds__post"
-             data-sly-list.item="${posts}">
-            <img src="${item.shortcode_media.display_resources[0].src @ context='uri'}" >
+        <div class="cmp-instagram__feed"
+             data-sly-repeat.item="${posts}">
+            <img class="cmp-instagram__image" src="${item.shortcode_media.display_resources[0].src @ context='uri'}" >
         </div>
     </div>
 
