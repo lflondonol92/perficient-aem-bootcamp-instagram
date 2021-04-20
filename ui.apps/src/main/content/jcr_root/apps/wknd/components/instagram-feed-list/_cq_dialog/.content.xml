@@ -79,6 +79,13 @@
                                                                 fieldDescription="When checked, IG Post won't show."
                                                                 name="./igMediaIsDisabled"
                                                                 value="{Boolean}true"/>
+                                                        <igProductReltedXF
+                                                                jcr:primaryType="nt:unstructured"
+                                                                sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                                                                fieldLabel="Product Related Experience Fragment"
+                                                                fieldDescription="The Experience Fragment to display as a modal when image is clicked"
+                                                                rootPath="/content/experience-fragments/wknd"
+                                                                name="./igProductRelatedXfPath"/>
                                                     </items>
                                                 </field>
                                             </igMediaPosts>

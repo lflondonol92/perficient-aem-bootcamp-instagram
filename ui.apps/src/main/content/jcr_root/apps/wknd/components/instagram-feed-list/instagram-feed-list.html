@@ -11,7 +11,18 @@
          data-sly-test.posts="${igfeedlist.posts}">
         <div class="cmp-instagram__feed"
              data-sly-repeat.item="${posts}">
-            <img class="cmp-instagram__image" src="${item.shortcode_media.display_resources[0].src @ context='uri'}" >
+            <img class="cmp-instagram__image"
+                 href="#ig-feed"
+                 data-modal-url="${properties.igProductRelatedXfPath}"
+                 data-type-name="${item.shortcode_media.__typename}"
+                 data-is-video="${item.shortcode_media.is_video}"
+                 data-media-to-caption="${item.shortcode_media.edgeMediaToCaption @ context='attribute'}"
+                 data-sidecar-to-children="${item.shortcode_media.edgeSidecarToChildren @ context='attribute'}"
+                 data-owner="${item.shortcode_media.edgeOwner @ context='attribute'}"
+                 src="${item.shortcode_media.display_resources[0].src @ context='uri'}" >
+            <div  class="cmp-instagram__xf-product-related"
+                  data-sly-test="${properties.igProductRelatedXfPath}">
+            </div>
         </div>
     </div>
 
