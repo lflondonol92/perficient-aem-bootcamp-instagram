@@ -39,3 +39,17 @@
   }
 
 }
+
+#wknd-ig-modal {
+  display: none;
+  position: fixed;
+  left: 0%;
+  top: 1%;
+
+  border: 1px solid blue;
+
+  width: calc(100% - 1%);
+  height: calc(100% - 1%);
+  background: white;
+  z-index: 999999;
+}
