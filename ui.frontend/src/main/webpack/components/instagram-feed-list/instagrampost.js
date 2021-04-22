@@ -28,27 +28,26 @@ jQuery(function ($) {
     function showModal(e) {
         e.preventDefault();
 
-        //const xfUrl = $(this).data('ig-modal-url');
-        const xfUrl = 'http://localhost:4502/content/experience-fragments/wknd/language-masters/en/site/sign-in/master.content.html';
+        const xfUrl = $(this).data('ig-modal-url');
         const typeName = $(this).data('type-name');
         const displayUrl = $(this).data('display-url');
         const sidecarToChildren = $(this).data('sidecar-to-children');
         const mediaSection = typeName == 'GraphImage' ? createGraphImage(displayUrl) : createSidecar(displayUrl, sidecarToChildren);
-        const mediaToCaption = $(this).data('media-to-caption');
-        const owner = $(this).data('owner');
+        const caption = $(this).data('media-to-caption') || {};
 
-        if (visible || !xfUrl) { return; }
+        //if (visible || !xfUrl) { return; }
+        if (visible) { return; }
         const showModalEvt = new Event('wknd-ig-modal-show');
         const body = document.querySelector('body');
 
         const modal = $('<div id="wknd-ig-modal"/>')
             .append(createHeaderModal())
-            .append(mediaSection);
+            .append(mediaSection)
+            .append(createModalBody($(this).data('owner'), caption))
 
         $(modal).ready(function (){
             $('#wknd-modal-close-btn').on('click', hideModal)
         })
-
         $('body').append(modal);
 
         modal.fadeIn(300, function() { visible = true; });
@@ -70,6 +69,32 @@ jQuery(function ($) {
 
         return false;
     }
+
+    function createModalBody(owner, caption){
+        const modalBody  = $('<div class="cpm-instagram-modal__body" />');
+        const ownerSection = $('<div class="cpm-instagram-modal__profile" />')
+            .append($('<img class="profile-picture" />').attr("src", owner.profile_pic_url))
+            .append($('<div class="profile-username" />').text(owner.username));
+
+        let captionSection;
+        const edges = caption.edges;
+        if(edges && edges.length > 0){
+            captionSection = $('<div class="cpm-instagram-modal__body-caption" />')
+                .text(edges[0].node.text);
+        }
+        if(captionSection){
+            return $(modalBody).append(ownerSection).append(captionSection);
+        }
+        return $(modalBody).append(ownerSection);
+    }
+
+    function createCaption(edges){
+        if(edges && edges.length > 0){
+            return $('<div class="cpm-instagram-modal_caption"/>').text(edges[0].node.text);
+        }
+        return null;
+    }
+
 
     function createGraphImage(displayUrl) {
         const container = $('<div class="cpm-instagram-modal__media"/>');
