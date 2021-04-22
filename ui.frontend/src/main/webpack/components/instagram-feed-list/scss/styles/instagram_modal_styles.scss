@@ -5,10 +5,15 @@
      justify-content: center;
      align-items: center;
 
+     @media only screen and (min-width: $screen-small) {
+       border: 1px solid red;
+       min-width:55%;
+       max-width:55%;
+     }
+
     &-image {
       margin: 10px;
-      width: 50%;
-      /*height: calc(100% - 10px);*/
+      width: 100%;
     }
 
   }
@@ -25,6 +30,14 @@
     font-family: 'Source Sans Pro';
   }
 
+  &__body-wrapper {
+    display:flex;
+    flex-direction: column;
+
+    @media only screen and (min-width: $screen-small) {
+      flex-direction: row;
+    }
+  }
 
   &__body {
     display:flex;

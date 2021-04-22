@@ -42,8 +42,8 @@ jQuery(function ($) {
 
         const modal = $('<div id="wknd-ig-modal"/>')
             .append(createHeaderModal())
-            .append(mediaSection)
-            .append(createModalBody($(this).data('owner'), caption))
+            .append(createBodyWrapper(mediaSection,
+                createModalBody($(this).data('owner'), caption)));
 
         $(modal).ready(function (){
             $('#wknd-modal-close-btn').on('click', hideModal)
@@ -95,6 +95,11 @@ jQuery(function ($) {
         return null;
     }
 
+    function createBodyWrapper(media, body){
+        const wrapper = $('<div class="cpm-instagram-modal__body-wrapper"/>')
+            .append(media).append(body);
+        return wrapper;
+    }
 
     function createGraphImage(displayUrl) {
         const container = $('<div class="cpm-instagram-modal__media"/>');
