@@ -1,0 +1,32 @@
+.cpm-instagram-modal {
+
+  &__carousel {
+    margin: 15px 15px;
+  }
+
+  &__carousel-image {
+    width: 100%;
+  }
+
+}
+
+#wkn-modal-prev,
+#wkn-modal-next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  left: 0%;
+  transform: translate(0%,-50%);
+}
+
+#wkn-modal-next {
+  left: 48%;
+}

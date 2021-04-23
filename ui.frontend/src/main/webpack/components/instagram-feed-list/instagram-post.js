@@ -44,16 +44,25 @@ jQuery(function ($) {
             .append(createHeaderModal())
             .append(createBodyWrapper(mediaSection,
                 createModalBody($(this).data('owner'), caption)));
-
-        $(modal).ready(function (){
-            $('#wknd-modal-close-btn').on('click', hideModal)
-        })
         $('body').append(modal);
+
 
         modal.fadeIn(300, function() { visible = true; });
         visible = true;
         // dispatch event to indicate that the modal has been shown
         // used by sign-in-form.js to dynamically update a successful sign-in redirect to the current page
+
+        $(modal).ready(function (){
+            $('#wknd-modal-close-btn').on('click', hideModal);
+            instagramCarousel.init();
+            $('#wkn-modal-prev').on('click', function (){
+                instagramCarousel.plusSlides(-1);
+            });
+            $('#wkn-modal-next').on('click', function (){
+                instagramCarousel.plusSlides(1);
+            });
+        })
+
         body.dispatchEvent(showModalEvt);
 
         /*$.get(xfUrl, function (data) {
@@ -69,6 +78,7 @@ jQuery(function ($) {
 
         return false;
     }
+
 
     function createModalBody(owner, caption){
         const modalBody  = $('<div class="cpm-instagram-modal__body" />');
@@ -110,9 +120,22 @@ jQuery(function ($) {
 
     function createSidecar(displayUrl, sidecarMedia) {
         const container = $('<div class="cpm-instagram-modal__media"/>');
-        const image = $('<img class="cpm-instagram-modal__media-image">')
-            .attr("src", displayUrl);
-        return container.append(image);
+        const slider = $('<div class="cpm-instagram-modal__carousel" />');
+        const edges = sidecarMedia.edges;
+        if(edges && edges.length > 0){
+
+            $.each(edges, function(idx, item){
+                const image = $('<img class="cpm-instagram-modal__carousel-image" />' )
+                    .attr("src", item.node.display_url);
+                slider.append(image);
+            });
+            //append the arrows
+            slider.append($('<a id="wkn-modal-prev" class="prev">&#10094;</a>'));
+            slider.append($('<a id="wkn-modal-next" class="next">&#10095;</a>'));
+
+        }
+
+        return container.append(slider);
     }
 
     function createHeaderModal(){
