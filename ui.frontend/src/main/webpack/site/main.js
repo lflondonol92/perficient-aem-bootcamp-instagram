@@ -10,4 +10,5 @@ import '../components/navigation/navigation.js';
 import '../components/form/sign-in-buttons/sign-in-buttons.js';
 import '../components/form/sign-in-form/sign-in-form.js';
 import '../components/contentfragment/js/contributor.js';
-import '../components/instagram-feed-list/instagrampost.js';
+import '../components/instagram-feed-list/instagram-carousel.js';
+import '../components/instagram-feed-list/instagram-post.js';
