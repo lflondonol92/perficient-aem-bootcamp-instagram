@@ -122,12 +122,24 @@ jQuery(function ($) {
         const container = $('<div class="cpm-instagram-modal__media"/>');
         const slider = $('<div class="cpm-instagram-modal__carousel" />');
         const edges = sidecarMedia.edges;
+
         if(edges && edges.length > 0){
 
             $.each(edges, function(idx, item){
-                const image = $('<img class="cpm-instagram-modal__carousel-image" />' )
-                    .attr("src", item.node.display_url);
-                slider.append(image);
+                if(item.node.is_video) {
+                    debugger;
+                    const video = $('<video class="cpm-instagram-modal__carousel-image video" />' );
+                        $(video).attr("poster", item.node.display_url)
+                        .attr("autoplay", "true")
+                        .attr("loop", "true");
+                    video.append($('<source />').attr("src", item.node.video_url).attr("type", "video/mp4"));
+                    slider.append(video);
+                }else{
+                    const image = $('<img class="cpm-instagram-modal__carousel-image" />' )
+                        .attr("src", item.node.display_url);
+                    slider.append(image);
+                }
+
             });
             //append the arrows
             slider.append($('<a id="wkn-modal-prev" class="prev">&#10094;</a>'));

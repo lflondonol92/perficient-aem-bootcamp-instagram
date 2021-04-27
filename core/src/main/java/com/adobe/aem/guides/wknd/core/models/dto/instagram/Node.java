@@ -9,6 +9,9 @@ public class Node {
     private Dimensions dimensions;
     private String display_url;
     private boolean is_video;
+    private String video_url;
+    private String video_view_count;
+    private String video_play_count;
     private DisplayResource[] display_resources;
 
     public Node(){
@@ -76,5 +79,29 @@ public class Node {
 
     public void setDisplay_resources(DisplayResource[] display_resources) {
         this.display_resources = display_resources;
+    }
+
+    public String getVideo_url() {
+        return video_url;
+    }
+
+    public void setVideo_url(String video_url) {
+        this.video_url = video_url;
+    }
+
+    public String getVideo_view_count() {
+        return video_view_count;
+    }
+
+    public void setVideo_view_count(String video_view_count) {
+        this.video_view_count = video_view_count;
+    }
+
+    public String getVideo_play_count() {
+        return video_play_count;
+    }
+
+    public void setVideo_play_count(String video_play_count) {
+        this.video_play_count = video_play_count;
     }
 }

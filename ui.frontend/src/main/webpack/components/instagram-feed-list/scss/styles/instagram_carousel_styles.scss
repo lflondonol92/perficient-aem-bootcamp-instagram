@@ -1,11 +1,27 @@
 .cpm-instagram-modal {
 
+  @keyframes show-animation {
+    from { opacity: 0.1; transform: translate(-100%, 0); }
+    to   { opacity: 1; transform: translate(0, 0); }
+  }
+
   &__carousel {
     margin: 15px 15px;
   }
 
   &__carousel-image {
     width: 100%;
+
+    &.show {
+      display: block;
+      animation: show-animation 300ms;
+    }
+
+    &.hide {
+      display: none;
+
+    }
+
   }
 
 }
