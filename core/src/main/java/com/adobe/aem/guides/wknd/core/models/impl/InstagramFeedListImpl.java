@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -66,6 +67,10 @@ public class InstagramFeedListImpl implements InstagramFeedList {
                     final String igMediaUrl = properties.get("igMediaUrl", String.class);
                     JsonObject jsonObject = igMediaService.getPostByURI(igMediaUrl);
                     Graphql graphql = gson.fromJson(jsonObject.get("graphql").toString(), Graphql.class);
+                    final String xfRelatedProductPath = properties.get("igProductRelatedXfPath", String.class);
+                    if(!StringUtils.isBlank(xfRelatedProductPath)){
+                        graphql.setXfRelatedProductPath(xfRelatedProductPath);
+                    }
                     instagramPosts.add(graphql);
                 }
             }
