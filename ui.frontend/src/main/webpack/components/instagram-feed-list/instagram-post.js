@@ -127,15 +127,14 @@ jQuery(function ($) {
 
             $.each(edges, function(idx, item){
                 if(item.node.is_video) {
-                    debugger;
-                    const video = $('<video class="cpm-instagram-modal__carousel-image video" />' );
+                    const video = $('<video class="cpm-instagram-modal__media-image video" />' );
                         $(video).attr("poster", item.node.display_url)
                         .attr("autoplay", "true")
                         .attr("loop", "true");
                     video.append($('<source />').attr("src", item.node.video_url).attr("type", "video/mp4"));
                     slider.append(video);
                 }else{
-                    const image = $('<img class="cpm-instagram-modal__carousel-image" />' )
+                    const image = $('<img class="cpm-instagram-modal__media-image" />' )
                         .attr("src", item.node.display_url);
                     slider.append(image);
                 }

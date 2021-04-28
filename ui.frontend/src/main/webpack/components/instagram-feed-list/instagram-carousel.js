@@ -1,6 +1,6 @@
 instagramCarousel = {
 
-    SIDECAR_SELECTOR : "cpm-instagram-modal__carousel-image",
+    SIDECAR_SELECTOR : "cpm-instagram-modal__media-image",
     slideIndex: 1,
 
     init : function () {
@@ -19,11 +19,11 @@ instagramCarousel = {
         if (n < 1) {this.slideIndex = x.length}
 
         for (i = 0; i < x.length; i++) {
-            //x[i].style.display = "none";
+
             x[i].classList.add("hide");
             x[i].classList.remove("show");
         }
-        //x[this.slideIndex-1].style.display = "block";
+
         x[this.slideIndex-1].classList.remove("hide");
         x[this.slideIndex-1].classList.add("show");
     }
