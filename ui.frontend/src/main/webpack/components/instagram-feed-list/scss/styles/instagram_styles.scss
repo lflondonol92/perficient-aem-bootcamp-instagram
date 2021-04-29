@@ -5,12 +5,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    /*border: 2px solid blue;*/
 
     &--is-mixed {
 
       .cmp-instagram__feed:first-child {
-        /*border: 1px solid red;*/
         flex: 1 1 100%;
         margin: 5px 0 15px 5px;
       }
@@ -25,7 +23,6 @@
 
   &__feed {
     margin: 5px;
-    /*border: 1px solid green;*/
     flex: 1 1 45%;
 
     &:nth-of-type(odd) {
@@ -34,6 +31,36 @@
 
     &:nth-of-type(even) {
       margin-right: 10px;
+    }
+
+  }
+
+  &__xf-product-related {
+    margin: 3% 5%;
+
+    .cmp-teaser__image {
+      border: 1px solid #d3d3d3;
+
+    }
+
+    & > div.xf-content-height > div {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: flex-start;
+    }
+
+    &.cmp-teaser__description {
+      font-size: 12px;
+    }
+
+    .cmp-teaser .cmp-teaser__action-link {
+      background: #ffffff;
+      border: 1px solid #7f7f7f;
+      border-radius: 10px;
+    }
+
+    .cmp-teaser__action-container {
+        text-align: center;
     }
 
   }

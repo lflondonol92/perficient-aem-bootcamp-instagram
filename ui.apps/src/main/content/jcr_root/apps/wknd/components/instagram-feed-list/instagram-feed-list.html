@@ -12,7 +12,7 @@
         <div class="cmp-instagram__feed"
              data-sly-repeat.item="${posts}">
             <a href="#ig-feed"
-               data-ig-modal-url="${item.xfRelatedProductPath @ selectors='content', extension = 'html'}"
+               data-ig-modal-url="${item.xfRelatedProductPath @ selectors='content', extension = 'html', context='uri'}"
                data-type-name="${item.shortcode_media.__typename}"
                data-is-video="${item.shortcode_media.is_video}"
                data-display-url="${item.shortcode_media.display_resources[0].src @ context='uri'}"
@@ -24,7 +24,7 @@
             </a>
             <div  class="cmp-instagram__xf-product-related"
                   data-sly-test="${wcmmode.edit && item.xfRelatedProductPath}">
-                <sly data-sly-resource="${item.xfRelatedProductPath @ selectors='content', extension = 'html'}"></sly>
+                <sly data-sly-resource="${item.xfRelatedProductPath @ selectors='content', wcmmode='disabled'}"></sly>
             </div>
         </div>
     </div>

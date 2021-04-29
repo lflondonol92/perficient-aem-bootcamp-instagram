@@ -6,9 +6,9 @@ jQuery(function ($) {
     let visible = false;
 
     /**
-     * Handle clicking of the Sign In button
+     * Handle clicking of the Post Click
      */
-    $('body').on('click', '[data-ig-modal-url]', showModal);
+    $('body').on('click', '[data-type-name]', showModal);
 
 
     /**
@@ -34,6 +34,7 @@ jQuery(function ($) {
         const sidecarToChildren = $(this).data('sidecar-to-children');
         const mediaSection = typeName == 'GraphImage' ? createGraphImage(displayUrl) : createSidecar(displayUrl, sidecarToChildren);
         const caption = $(this).data('media-to-caption') || {};
+        const dataOwner = $(this).data('owner');
 
         //if (visible || !xfUrl) { return; }
         if (visible) { return; }
@@ -41,46 +42,69 @@ jQuery(function ($) {
         const body = document.querySelector('body');
 
         const modal = $('<div id="wknd-ig-modal"/>')
-            .append(createHeaderModal())
-            .append(createBodyWrapper(mediaSection,
-                createModalBody($(this).data('owner'), caption)));
-        $('body').append(modal);
+            .append(createHeaderModal());
 
+        if (xfUrl) {
+            //if there is related products, get and inject them to the modal
+            const xfRelatedProducts = xfUrl + "?wcmmode=disabled";
+            $.get(xfRelatedProducts, function (data) {
+                if(data){
+                    const relatedProducts = $('<div class="cmp-instagram__xf-product-related"/>')
+                        .append(data);
+                    $(modal).append(createBodyWrapper(mediaSection,
+                        createModalBody(dataOwner, caption, relatedProducts)));
 
-        modal.fadeIn(300, function() { visible = true; });
-        visible = true;
-        // dispatch event to indicate that the modal has been shown
-        // used by sign-in-form.js to dynamically update a successful sign-in redirect to the current page
+                    $('body').append(modal);
+                    modal.fadeIn(300, function() { visible = true; });
+                    visible = true;
+                    // dispatch event to indicate that the modal has been shown
+                    // used by sign-in-form.js to dynamically update a successful sign-in redirect to the current page
 
-        $(modal).ready(function (){
-            $('#wknd-modal-close-btn').on('click', hideModal);
-            instagramCarousel.init();
-            $('#wkn-modal-prev').on('click', function (){
-                instagramCarousel.plusSlides(-1);
+                    $(modal).ready(function (){
+                        $('#wknd-modal-close-btn').on('click', hideModal);
+                        instagramCarousel.init();
+                        $('#wkn-modal-prev').on('click', function (){
+                            instagramCarousel.plusSlides(-1);
+                        });
+                        $('#wkn-modal-next').on('click', function (){
+                            instagramCarousel.plusSlides(1);
+                        });
+                    })
+
+                    body.dispatchEvent(showModalEvt);
+                }
             });
-            $('#wkn-modal-next').on('click', function (){
-                instagramCarousel.plusSlides(1);
-            });
-        })
+        }else{
+            $(modal).append(createBodyWrapper(mediaSection,
+                createModalBody(dataOwner, caption, null)));
 
-        body.dispatchEvent(showModalEvt);
-
-        /*$.get(xfUrl, function (data) {
-            const modal = $('<div id="wknd-ig-modal"/>');
-
-            $('body').apui.frontend/src/main/webpack/components/instagram-feed-list/instagrampost.jspend(modal.append(data));
+            $('body').append(modal);
             modal.fadeIn(300, function() { visible = true; });
             visible = true;
             // dispatch event to indicate that the modal has been shown
             // used by sign-in-form.js to dynamically update a successful sign-in redirect to the current page
+
+            $(modal).ready(function (){
+                $('#wknd-modal-close-btn').on('click', hideModal);
+                instagramCarousel.init();
+                $('#wkn-modal-prev').on('click', function (){
+                    instagramCarousel.plusSlides(-1);
+                });
+                $('#wkn-modal-next').on('click', function (){
+                    instagramCarousel.plusSlides(1);
+                });
+            })
+
             body.dispatchEvent(showModalEvt);
-        });*/
+        }
+
+
 
         return false;
     }
 
 
-    function createModalBody(owner, caption){
+    function createModalBody(owner, caption, relatedProducts){
         const modalBody  = $('<div class="cpm-instagram-modal__body" />');
         const ownerSection = $('<div class="cpm-instagram-modal__profile" />')
             .append($('<img class="profile-picture" />').attr("src", owner.profile_pic_url))
@@ -93,9 +117,9 @@ jQuery(function ($) {
                 .text(edges[0].node.text);
         }
         if(captionSection){
-            return $(modalBody).append(ownerSection).append(captionSection);
+            return $(modalBody).append(ownerSection).append(captionSection).append(relatedProducts);
         }
-        return $(modalBody).append(ownerSection);
+        return $(modalBody).append(ownerSection).append(relatedProducts);
     }
 
     function createCaption(edges){
