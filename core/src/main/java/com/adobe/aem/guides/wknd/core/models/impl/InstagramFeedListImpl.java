@@ -47,6 +47,8 @@ public class InstagramFeedListImpl implements InstagramFeedList {
     @ChildResource @Via("resource") @Optional
     protected Resource igPosts;
 
+    private boolean hasPosts = false;
+
     private List<Graphql> instagramPosts;
 
 
@@ -58,6 +60,7 @@ public class InstagramFeedListImpl implements InstagramFeedList {
 
         if(igPosts != null && igPosts.hasChildren()){
             Iterator<Resource> iterator = igPosts.getChildren().iterator();
+            hasPosts = true;
             while(iterator.hasNext()){
                 Resource igPostNode = iterator.next();
                 ValueMap properties = igPostNode.adaptTo(ValueMap.class);
@@ -83,6 +86,9 @@ public class InstagramFeedListImpl implements InstagramFeedList {
         return instagramPosts;
     }
 
+    public boolean isHasPosts() {
+        return hasPosts;
+    }
 }
 
 
