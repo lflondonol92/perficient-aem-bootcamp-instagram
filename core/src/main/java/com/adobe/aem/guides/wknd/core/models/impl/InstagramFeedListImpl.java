@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import com.adobe.aem.guides.wknd.core.models.InstagramFeedList;
-import com.adobe.aem.guides.wknd.core.models.dto.instagram.Graphql;
 import com.adobe.aem.guides.wknd.core.models.dto.instagram.v2.GraphqlV2;
 import com.adobe.aem.guides.wknd.services.InstagramMediaService;
 import com.google.gson.Gson;
@@ -50,7 +49,7 @@ public class InstagramFeedListImpl implements InstagramFeedList {
 
     private boolean hasPosts = false;
 
-    private List<Graphql> instagramPosts;
+    private List<GraphqlV2> instagramPosts;
 
 
     @PostConstruct
@@ -72,7 +71,7 @@ public class InstagramFeedListImpl implements InstagramFeedList {
                     final String igMediaUrl = properties.get("igMediaUrl", String.class);
                     JsonObject jsonObject = igMediaService.getPostByURI(igMediaUrl);
 
-                    GraphqlV2 graphql = gson.fromJson(jsonObject.get("graphql").toString(), GraphqlV2.class);
+                    GraphqlV2 graphql = gson.fromJson(jsonObject.toString(), GraphqlV2.class);
                     final String xfRelatedProductPath = properties.get("igProductRelatedXfPath", String.class);
                     if(!StringUtils.isBlank(xfRelatedProductPath)){
                         graphql.setXfRelatedProductPath(xfRelatedProductPath);
@@ -86,7 +85,7 @@ public class InstagramFeedListImpl implements InstagramFeedList {
         LOGGER.info("finish initialization");
     }
 
-    @Override public List<Graphql> getPosts() {
+    @Override public List<GraphqlV2> getPosts() {
         return instagramPosts;
     }
 
