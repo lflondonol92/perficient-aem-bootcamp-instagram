@@ -8,12 +8,13 @@ import javax.annotation.PostConstruct;
 
 import com.adobe.aem.guides.wknd.core.models.InstagramFeedList;
 import com.adobe.aem.guides.wknd.core.models.dto.instagram.Graphql;
+import com.adobe.aem.guides.wknd.core.models.dto.instagram.v2.GraphqlV2;
 import com.adobe.aem.guides.wknd.services.InstagramMediaService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -67,13 +68,16 @@ public class InstagramFeedListImpl implements InstagramFeedList {
                 Boolean isDisabled = BooleanUtils.toBooleanDefaultIfNull(properties.get("igMediaIsDisabled", Boolean.class),
                         Boolean.FALSE);
                 if(!isDisabled){
+
                     final String igMediaUrl = properties.get("igMediaUrl", String.class);
                     JsonObject jsonObject = igMediaService.getPostByURI(igMediaUrl);
-                    Graphql graphql = gson.fromJson(jsonObject.get("graphql").toString(), Graphql.class);
+
+                    GraphqlV2 graphql = gson.fromJson(jsonObject.get("graphql").toString(), GraphqlV2.class);
                     final String xfRelatedProductPath = properties.get("igProductRelatedXfPath", String.class);
                     if(!StringUtils.isBlank(xfRelatedProductPath)){
                         graphql.setXfRelatedProductPath(xfRelatedProductPath);
                     }
+
                     instagramPosts.add(graphql);
                 }
             }
