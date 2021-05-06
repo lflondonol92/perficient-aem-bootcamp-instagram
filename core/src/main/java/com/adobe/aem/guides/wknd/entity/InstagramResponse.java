@@ -1,5 +1,6 @@
 package com.adobe.aem.guides.wknd.entity;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -8,6 +9,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
 
 public class InstagramResponse {
 
@@ -47,6 +50,18 @@ public class InstagramResponse {
             }
         }
         return responseBody;
+    }
+
+    public BufferedImage getResponseImage(){
+        BufferedImage img = null;
+        try{
+            if (response.getEntity() != null) {
+                img = ImageIO.read(response.getEntity().getContent());
+            }
+        }catch (Exception e){
+            LOG.error("Error in getting image response {}", e.getMessage());
+        }
+        return img;
     }
 
     public void setResponseBody(final String responseBody) {

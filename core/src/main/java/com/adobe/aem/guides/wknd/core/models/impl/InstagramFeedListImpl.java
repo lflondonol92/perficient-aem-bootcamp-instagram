@@ -7,7 +7,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import com.adobe.aem.guides.wknd.core.models.InstagramFeedList;
+import com.adobe.aem.guides.wknd.core.models.dto.instagram.DisplayResource;
+import com.adobe.aem.guides.wknd.core.models.dto.instagram.GraphImageNode;
 import com.adobe.aem.guides.wknd.core.models.dto.instagram.Graphql;
+import com.adobe.aem.guides.wknd.core.models.dto.instagram.Node;
 import com.adobe.aem.guides.wknd.services.InstagramMediaService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,6 +40,7 @@ public class InstagramFeedListImpl implements InstagramFeedList {
 
     // Add a logger for any errors
     private static final Logger LOGGER = LoggerFactory.getLogger(InstagramFeedListImpl.class);
+    private static final String IMG_BASE64_PREFIX = "data:image/jpg;base64,";
 
     @Self
     private SlingHttpServletRequest request;
@@ -74,6 +78,7 @@ public class InstagramFeedListImpl implements InstagramFeedList {
                     if(!StringUtils.isBlank(xfRelatedProductPath)){
                         graphql.setXfRelatedProductPath(xfRelatedProductPath);
                     }
+                    updateGraphToBaseIGURI(graphql);
                     instagramPosts.add(graphql);
                 }
             }
@@ -89,6 +94,39 @@ public class InstagramFeedListImpl implements InstagramFeedList {
     public boolean isHasPosts() {
         return hasPosts;
     }
+
+    protected void updateGraphToBaseIGURI(Graphql graphql){
+        if(graphql != null){
+            String base64Src;
+            DisplayResource[] resources = graphql.getShortcode_media().getDisplay_resources();
+            //Set all the resources images
+            for(DisplayResource dr: resources){
+                String src = dr.getSrc();
+                base64Src = igMediaService.getImageToBase64(src);
+                dr.setSrc(new String(IMG_BASE64_PREFIX + base64Src));
+            }
+            graphql.getShortcode_media().setDisplay_resources(resources);
+
+            //profile pic_url
+            final String profilePicUrl = graphql.getShortcode_media().getOwner().getProfile_pic_url();
+            base64Src = igMediaService.getImageToBase64(profilePicUrl);
+            graphql.getShortcode_media().getOwner().setProfile_pic_url(new String(IMG_BASE64_PREFIX + base64Src));
+
+            //edges
+            if(graphql.getShortcode_media().getEdge_sidecar_to_children() !=null &&
+                    graphql.getShortcode_media().getEdge_sidecar_to_children().getEdges()!= null){
+                GraphImageNode[] edges = graphql.getShortcode_media().getEdge_sidecar_to_children().getEdges();
+                for(int i=0; i< edges.length; i++){
+                    Node node = edges[i].getNode();
+                    final String displayUrl = node.getDisplay_url();
+                    base64Src = igMediaService.getImageToBase64(displayUrl);
+                    node.setDisplay_url(new String(IMG_BASE64_PREFIX + base64Src));
+                }
+            }
+
+        }
+    }
+
 }
 
 

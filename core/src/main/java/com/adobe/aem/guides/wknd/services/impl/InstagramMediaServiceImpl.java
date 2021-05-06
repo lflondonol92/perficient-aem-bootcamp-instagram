@@ -6,7 +6,7 @@ import com.adobe.aem.guides.wknd.services.InstagramRequestService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -19,8 +19,15 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import javax.json.Json;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Inherited;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Base64;
 
 
 @Component(service = InstagramMediaService.class)
@@ -67,13 +74,9 @@ public class InstagramMediaServiceImpl implements InstagramMediaService {
         return jsonResponse;
     }
 
-    @Override public JsonObject getFeedById(String id) {
-        return null;
-    }
 
     @Override public JsonObject getPostByURI(String uri) {
         JsonObject jsonResponse = null;
-        //JsonReader jsonReader = null;
 
         final CloseableHttpClient httpClient = requestService.getConfiguredHttpClient();
         StringBuilder igFeedUrl = new StringBuilder(uri);
@@ -85,29 +88,83 @@ public class InstagramMediaServiceImpl implements InstagramMediaService {
         httpget.addHeader("Accept-Encoding","gzip, deflate, br");
         httpget.addHeader("Connection","keep-alive");
 
-
         try {
             HttpResponse httpResponse = httpClient.execute(httpget);
             InstagramResponse response = new InstagramResponse(httpResponse);
             String jsonString = response.getResponseBody();
-            //Check to make sure JSON is well formed. PIM HTML starts with [
-            if (!StringUtils.startsWith(jsonString, "{")) {
-                //remove the [] from the response to make it flat JSON
-                //String noArray = StringUtils.substring(StringUtils.substringBeforeLast(jsonString, "]"), 1);
-                //add surrounding {} to make it will formed JSON
-            }
+
             LOG.trace(jsonString);
             JsonElement jsonElement = new JsonParser().parse(jsonString);
             jsonResponse = jsonElement.getAsJsonObject();
+
             httpClient.close();
 
         } catch (IOException e) {
-            LOG.error("Unable to get the response from Salsify", e);
-        } finally {
-            /*if (jsonReader != null) {
-                jsonReader.close();
-            }*/
+            LOG.error("Unable to get the response from Instagram", e);
         }
         return jsonResponse;
     }
+
+    /*protected JsonObject convertUrlToBase64(JsonObject jsonObject){
+        JsonElement root = jsonObject.get("graphql");
+        final String display_url = root.getAsJsonObject().get("shortcode_media")
+                .getAsJsonObject().get("display_url").getAsString();
+        String imageBase64 = getImageToBase64(display_url);
+        if(StringUtils.isNotBlank(imageBase64)){
+            root.getAsJsonObject().get("shortcode_media")
+                    .getAsJsonObject().addProperty("display_url", imageBase64);
+            jsonObject = root.getAsJsonObject();
+        }
+
+        return jsonObject;
+    }*/
+
+    @Override
+    public String getImageToBase64(String src){
+        final CloseableHttpClient httpClient = requestService.getConfiguredHttpClient();
+        String stringBase64 = StringUtils.EMPTY;
+        URI uri = null;
+        try{
+            uri = new URI(src);
+        }catch (URISyntaxException e){
+            LOG.error("Error un URI {}", e.getMessage());
+        }
+        StringBuilder igFeedUrl = new StringBuilder(src);
+
+        HttpGet httpget = new HttpGet(igFeedUrl.toString());
+        httpget.addHeader("method","GET");
+        if(uri != null){
+            httpget.addHeader("authority",uri.getHost());
+            httpget.addHeader("path", uri.getPath());
+        }
+        httpget.addHeader("scheme","https");
+        httpget.addHeader("accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+        httpget.addHeader("user-agent","Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0");
+        httpget.addHeader("accept-encoding","gzip, deflate, br");
+        httpget.addHeader("Connection","keep-alive");
+        httpget.addHeader("accept-language","en-US,en;q=0.9,fr;q=0.8");
+        httpget.addHeader("cache-control","no-cache");
+        httpget.addHeader("pragma","no-cache");
+
+        httpget.addHeader("sec-fetch-dest","document");
+        httpget.addHeader("sec-fetch-mode","navigate");
+        httpget.addHeader("sec-fetch-site","none");
+        httpget.addHeader("sec-fetch-user","?1");
+
+
+        try {
+            HttpResponse httpResponse = httpClient.execute(httpget);
+            InstagramResponse response = new InstagramResponse(httpResponse);
+            //
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(response.getResponseImage(), "jpg", baos);
+            stringBase64 = Base64.getEncoder().encodeToString(baos.toByteArray());
+            httpClient.close();
+
+        } catch (IOException e) {
+            LOG.error("Unable to get the response from Instagram", e);
+        }
+        return stringBase64;
+    }
+
 }
