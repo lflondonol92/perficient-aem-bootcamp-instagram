@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -23,6 +24,8 @@ public class InstagramResponse {
     private int status;
     private String responseBody;
     private HttpResponse response;
+    private byte[] responseBodyBytesArr;
+    private String contentType;
 
     public InstagramResponse(HttpResponse httpResponse) {
         LOG.debug("Creating IG Media object base on HttpResponse...");
@@ -62,6 +65,18 @@ public class InstagramResponse {
             LOG.error("Error in getting image response {}", e.getMessage());
         }
         return img;
+    }
+
+    public byte[] getResponseBodyAsByteArr(){
+        if (StringUtils.isBlank(responseBody) && response.getEntity() != null) {
+            try {
+                responseBodyBytesArr = IOUtils.toByteArray(response.getEntity().getContent());
+                contentType = response.getEntity().getContentType().getValue();
+            } catch (IOException e) {
+                LOG.error("response could not be parsed.", e);
+            }
+        }
+        return responseBodyBytesArr;
     }
 
     public void setResponseBody(final String responseBody) {

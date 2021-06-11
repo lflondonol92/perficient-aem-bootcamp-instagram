@@ -41,6 +41,7 @@ public class InstagramFeedListImpl implements InstagramFeedList {
     // Add a logger for any errors
     private static final Logger LOGGER = LoggerFactory.getLogger(InstagramFeedListImpl.class);
     private static final String IMG_BASE64_PREFIX = "data:image/jpg;base64,";
+    private static final String VIDEO_BASE64_PREFIX = "data:video/mp4;base64,";
 
     @Self
     private SlingHttpServletRequest request;
@@ -119,8 +120,14 @@ public class InstagramFeedListImpl implements InstagramFeedList {
                 for(int i=0; i< edges.length; i++){
                     Node node = edges[i].getNode();
                     final String displayUrl = node.getDisplay_url();
-                    base64Src = igMediaService.getImageToBase64(displayUrl);
-                    node.setDisplay_url(new String(IMG_BASE64_PREFIX + base64Src));
+                    if(node.isIs_video()){
+                        base64Src = igMediaService.getImageToBase64(node.getVideo_url());
+                        node.setVideo_url(new String(VIDEO_BASE64_PREFIX + base64Src));
+                    }else{
+                        base64Src = igMediaService.getImageToBase64(displayUrl);
+                        node.setDisplay_url(new String(IMG_BASE64_PREFIX + base64Src));
+                    }
+
                 }
             }
 

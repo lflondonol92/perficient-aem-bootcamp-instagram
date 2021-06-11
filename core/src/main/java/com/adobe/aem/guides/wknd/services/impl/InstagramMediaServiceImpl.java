@@ -3,6 +3,7 @@ package com.adobe.aem.guides.wknd.services.impl;
 import com.adobe.aem.guides.wknd.entity.InstagramResponse;
 import com.adobe.aem.guides.wknd.services.InstagramMediaService;
 import com.adobe.aem.guides.wknd.services.InstagramRequestService;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -20,8 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
-import javax.json.Json;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Inherited;
@@ -41,7 +40,6 @@ public class InstagramMediaServiceImpl implements InstagramMediaService {
     protected static final String DEFAULT_IG_FIELDS = "caption,comments_count,ig_id,is_comment_enabled,media_product_type,media_type,media_url,permalink,shortcode,thumbnail_url,children";
 
     @Reference InstagramRequestService requestService;
-    //@Reference ResourceResolverFactory resourceResolverFactory;
 
     private String url;
     private String igFeedFields;
@@ -105,20 +103,6 @@ public class InstagramMediaServiceImpl implements InstagramMediaService {
         return jsonResponse;
     }
 
-    /*protected JsonObject convertUrlToBase64(JsonObject jsonObject){
-        JsonElement root = jsonObject.get("graphql");
-        final String display_url = root.getAsJsonObject().get("shortcode_media")
-                .getAsJsonObject().get("display_url").getAsString();
-        String imageBase64 = getImageToBase64(display_url);
-        if(StringUtils.isNotBlank(imageBase64)){
-            root.getAsJsonObject().get("shortcode_media")
-                    .getAsJsonObject().addProperty("display_url", imageBase64);
-            jsonObject = root.getAsJsonObject();
-        }
-
-        return jsonObject;
-    }*/
-
     @Override
     public String getImageToBase64(String src){
         final CloseableHttpClient httpClient = requestService.getConfiguredHttpClient();
@@ -156,9 +140,9 @@ public class InstagramMediaServiceImpl implements InstagramMediaService {
             HttpResponse httpResponse = httpClient.execute(httpget);
             InstagramResponse response = new InstagramResponse(httpResponse);
             //
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(response.getResponseImage(), "jpg", baos);
-            stringBase64 = Base64.getEncoder().encodeToString(baos.toByteArray());
+
+            byte[] responseBodyByteArr = response.getResponseBodyAsByteArr();
+            stringBase64 = Base64.getEncoder().encodeToString(responseBodyByteArr);
             httpClient.close();
 
         } catch (IOException e) {
