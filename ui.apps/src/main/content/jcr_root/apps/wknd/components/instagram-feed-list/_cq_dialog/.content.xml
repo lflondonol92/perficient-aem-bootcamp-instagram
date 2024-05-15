@@ -68,9 +68,9 @@
                                                         <igMediaUrl
                                                                 jcr:primaryType="nt:unstructured"
                                                                 sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
-                                                                fieldDescription="This is the public URL of the post"
-                                                                fieldLabel="Instagram URL Post"
-                                                                name="./igMediaUrl"/>
+                                                                fieldDescription="This is the Media ID of the post. e.g. 18003166640598633"
+                                                                fieldLabel="Instagram Media ID"
+                                                                name="./igMediaID"/>
                                                         <igMediaIsDisabled
                                                                 jcr:primaryType="nt:unstructured"
                                                                 sling:resourceType="granite/ui/components/coral/foundation/form/checkbox"

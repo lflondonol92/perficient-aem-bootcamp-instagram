@@ -11,16 +11,15 @@
          data-sly-test.posts="${igfeedlist.posts}">
         <div class="cmp-instagram__feed"
              data-sly-repeat.item="${posts}">
+            ${item.permalink}
             <a href="#ig-feed"
                data-ig-modal-url="${item.xfRelatedProductPath @ selectors='content', extension = 'html', context='uri'}"
-               data-type-name="${item.shortcode_media.__typename}"
-               data-is-video="${item.shortcode_media.is_video}"
-               data-display-url="${item.shortcode_media.display_resources[0].src @ context='uri'}"
-               data-media-to-caption="${item.shortcode_media.edgeMediaToCaption @ context='attribute'}"
-               data-sidecar-to-children="${item.shortcode_media.edgeSidecarToChildren @ context='attribute'}"
-               data-owner="${item.shortcode_media.edgeOwner @ context='attribute'}">
+               data-type-name="${item.media_type}"
+               data-is-video="${item.media_type == 'VIDEO'}"
+               data-display-url="${item.media_url @ context='uri'}"
+               data-media-to-caption="${item.caption @ context='attribute'}">
                 <img class="cmp-instagram__image"
-                     src="${item.shortcode_media.display_resources[0].src @ context='uri'}" >
+                     src="${item.media_url @ context='uri'}" >
             </a>
             <div  class="cmp-instagram__xf-product-related"
                   data-sly-test="${wcmmode.edit && item.xfRelatedProductPath}">

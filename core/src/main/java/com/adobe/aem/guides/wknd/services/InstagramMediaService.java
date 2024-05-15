@@ -6,6 +6,4 @@ public interface InstagramMediaService {
 
     JsonObject getMediaById(String igMediaId);
 
-    JsonObject getPostByURI(String uri);
-
 }
