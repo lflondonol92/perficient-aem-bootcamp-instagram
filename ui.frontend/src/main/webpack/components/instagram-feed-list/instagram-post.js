@@ -26,15 +26,17 @@ jQuery(function ($) {
     });
 
     function showModal(e) {
+        $('body').addClass('modal');
         e.preventDefault();
 
         const xfUrl = $(this).data('ig-modal-url');
         const typeName = $(this).data('type-name');
         const displayUrl = $(this).data('display-url');
-        const sidecarToChildren = $(this).data('sidecar-to-children');
-        const mediaSection = typeName == 'GraphImage' ? createGraphImage(displayUrl) : createSidecar(displayUrl, sidecarToChildren);
+        //const sidecarToChildren = $(this).data('sidecar-to-children');
+        const mediaSection = typeName == 'IMAGE' ? createGraphImage(displayUrl) : createSidecar(displayUrl, sidecarToChildren);
         const caption = $(this).data('media-to-caption') || {};
-        const dataOwner = $(this).data('owner');
+        //const dataOwner = $(this).data('owner');
+        const dataOwner = "owner";
 
         //if (visible || !xfUrl) { return; }
         if (visible) { return; }
@@ -107,14 +109,14 @@ jQuery(function ($) {
     function createModalBody(owner, caption, relatedProducts){
         const modalBody  = $('<div class="cpm-instagram-modal__body" />');
         const ownerSection = $('<div class="cpm-instagram-modal__profile" />')
-            .append($('<img class="profile-picture" />').attr("src", owner.profile_pic_url))
-            .append($('<div class="profile-username" />').text(owner.username));
+            .append($('<img class="profile-picture" />').attr("src", "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=10161708314639083&height=50&width=50&ext=1718397347&hash=AbYcafFXd27XWTrw6wkK3vGU"))
+            .append($('<div class="profile-username" />').text(owner));
 
         let captionSection;
-        const edges = caption.edges;
-        if(edges && edges.length > 0){
-            captionSection = $('<div class="cpm-instagram-modal__body-caption" />')
-                .text(edges[0].node.text);
+        //const edges = caption.edges;
+        if(caption){
+            captionSection = $('<div class="cpm-instagram-modal__body-caption" />').
+                text(caption);        
         }
         if(captionSection){
             return $(modalBody).append(ownerSection).append(captionSection).append(relatedProducts);
@@ -180,6 +182,8 @@ jQuery(function ($) {
     }
 
     function hideModal(e) {
+        $('body').removeClass('modal');
+
         const modal = $('#wknd-ig-modal');
         // if the target of the click isn't the modal nor a descendant of the modal
         if (visible && modal && !modal.is(e.target) && (modal.has(e.target).length === 0 ||

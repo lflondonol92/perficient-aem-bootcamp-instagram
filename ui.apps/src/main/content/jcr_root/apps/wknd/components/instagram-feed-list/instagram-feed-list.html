@@ -1,23 +1,21 @@
 <div data-sly-use.component="com.adobe.cq.wcm.core.components.models.Component"
      data-sly-use.igfeedlist="com.adobe.aem.guides.wknd.core.models.InstagramFeedList"
+     data-sly-use.user="com.adobe.aem.guides.wknd.core.models.InstagramUserModel"
      data-sly-use.template="core/wcm/components/commons/v1/templates.html"
      id="${component.id}"
      class="cmp-instagram"
      data-sly-use.media="media.js">
-    <span class="cmp-instagram-list__properties">
-        ${media.title}
-    </span>
-    <div class="cmp-instagram__layout cmp-instagram__layout--is-mixed"
+    <div class="cmp-instagram__layout"
          data-sly-test.posts="${igfeedlist.posts}">
         <div class="cmp-instagram__feed"
              data-sly-repeat.item="${posts}">
-            ${item.permalink}
             <a href="#ig-feed"
                data-ig-modal-url="${item.xfRelatedProductPath @ selectors='content', extension = 'html', context='uri'}"
                data-type-name="${item.media_type}"
                data-is-video="${item.media_type == 'VIDEO'}"
                data-display-url="${item.media_url @ context='uri'}"
-               data-media-to-caption="${item.caption @ context='attribute'}">
+               data-media-to-caption="${item.caption @ context='attribute'}"
+               data-owner="${user.instagramUser.name}">
                 <img class="cmp-instagram__image"
                      src="${item.media_url @ context='uri'}" >
             </a>
