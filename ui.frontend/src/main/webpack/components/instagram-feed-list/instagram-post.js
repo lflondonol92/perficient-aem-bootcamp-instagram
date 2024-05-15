@@ -35,8 +35,8 @@ jQuery(function ($) {
         //const sidecarToChildren = $(this).data('sidecar-to-children');
         const mediaSection = typeName == 'IMAGE' ? createGraphImage(displayUrl) : createSidecar(displayUrl, sidecarToChildren);
         const caption = $(this).data('media-to-caption') || {};
-        //const dataOwner = $(this).data('owner');
-        const dataOwner = "owner";
+        const dataOwnerName = $(this).data('owner-name');
+        const dataOwnerPicture = $(this).data('owner-picture');
 
         //if (visible || !xfUrl) { return; }
         if (visible) { return; }
@@ -54,7 +54,7 @@ jQuery(function ($) {
                     const relatedProducts = $('<div class="cmp-instagram__xf-product-related"/>')
                         .append(data);
                     $(modal).append(createBodyWrapper(mediaSection,
-                        createModalBody(dataOwner, caption, relatedProducts)));
+                        createModalBody(dataOwnerName, dataOwnerPicture, caption, relatedProducts)));
 
                     $('body').append(modal);
                     modal.fadeIn(300, function() { visible = true; });
@@ -78,7 +78,7 @@ jQuery(function ($) {
             });
         }else{
             $(modal).append(createBodyWrapper(mediaSection,
-                createModalBody(dataOwner, caption, null)));
+                createModalBody(dataOwnerName, dataOwnerPicture, caption, null)));
 
             $('body').append(modal);
             modal.fadeIn(300, function() { visible = true; });
@@ -106,11 +106,11 @@ jQuery(function ($) {
     }
 
 
-    function createModalBody(owner, caption, relatedProducts){
+    function createModalBody(ownerName, ownerPicture, caption, relatedProducts){
         const modalBody  = $('<div class="cpm-instagram-modal__body" />');
         const ownerSection = $('<div class="cpm-instagram-modal__profile" />')
-            .append($('<img class="profile-picture" />').attr("src", "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=10161708314639083&height=50&width=50&ext=1718397347&hash=AbYcafFXd27XWTrw6wkK3vGU"))
-            .append($('<div class="profile-username" />').text(owner));
+            .append($('<img class="profile-picture" />').attr("src", ownerPicture))
+            .append($('<div class="profile-username" />').text(ownerName));
 
         let captionSection;
         //const edges = caption.edges;

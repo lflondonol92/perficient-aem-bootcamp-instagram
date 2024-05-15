@@ -15,7 +15,8 @@
                data-is-video="${item.media_type == 'VIDEO'}"
                data-display-url="${item.media_url @ context='uri'}"
                data-media-to-caption="${item.caption @ context='attribute'}"
-               data-owner="${user.instagramUser.name}">
+               data-owner-name="${user.instagramUser.name}"
+               data-owner-picture="${user.instagramUser.profilePictureUrl}">
                 <img class="cmp-instagram__image"
                      src="${item.media_url @ context='uri'}" >
             </a>

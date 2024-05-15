@@ -40,5 +40,6 @@ public class InstagramUserModelImpl implements InstagramUserModel {
         Gson gson = new GsonBuilder().create();
         JsonObject jsonObject = instagramUserService.getUserInfo("");
         instagramUser = gson.fromJson(jsonObject, InstagramUser.class);
+        instagramUser.setProfilePictureUrl(jsonObject.getAsJsonObject("picture").getAsJsonObject("data").get("url").getAsString());
     }
 }
