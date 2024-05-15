@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component(service = InstagramUserService.class)
 public class InstagramUserServiceImpl implements InstagramUserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InstagramUserServiceImpl.class);
