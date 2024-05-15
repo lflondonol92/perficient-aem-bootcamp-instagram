@@ -3,9 +3,8 @@ package com.adobe.aem.guides.wknd.core.models.impl;
 import com.adobe.aem.guides.wknd.core.models.InstagramFeedList;
 import com.adobe.aem.guides.wknd.core.models.dto.instagram.InstagramPost;
 import com.adobe.aem.guides.wknd.services.InstagramMediaService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.Getter;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -45,16 +44,16 @@ public class InstagramFeedListImpl implements InstagramFeedList {
     @ChildResource @Via("resource") @Optional
     protected Resource igPosts;
 
+    @Getter
     private boolean hasPosts = false;
 
     private List<InstagramPost> instagramPosts;
 
 
     @PostConstruct
-    private void init() {
+    private void init() throws JsonProcessingException {
         LOGGER.info("init InstagramFeedListImpl");
         instagramPosts = new ArrayList<>();
-        Gson gson = new GsonBuilder().create();
 
         if(igPosts != null && igPosts.hasChildren()){
             Iterator<Resource> iterator = igPosts.getChildren().iterator();
@@ -68,9 +67,7 @@ public class InstagramFeedListImpl implements InstagramFeedList {
                 if(!isDisabled){
 
                     final String igMediaID = properties.get("igMediaID", String.class);
-                    JsonObject jsonObject = igMediaService.getMediaById(igMediaID);
-
-                    InstagramPost instagramPost = gson.fromJson(jsonObject.toString(), InstagramPost.class);
+                    InstagramPost instagramPost = igMediaService.getMediaById(igMediaID);
                     final String xfRelatedProductPath = properties.get("igProductRelatedXfPath", String.class);
                     if(!StringUtils.isBlank(xfRelatedProductPath)){
                         instagramPost.setXfRelatedProductPath(xfRelatedProductPath);
@@ -88,9 +85,6 @@ public class InstagramFeedListImpl implements InstagramFeedList {
         return instagramPosts;
     }
 
-    public boolean isHasPosts() {
-        return hasPosts;
-    }
 }
 
 

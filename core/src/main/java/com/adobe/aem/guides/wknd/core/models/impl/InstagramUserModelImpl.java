@@ -3,9 +3,7 @@ package com.adobe.aem.guides.wknd.core.models.impl;
 import com.adobe.aem.guides.wknd.core.models.InstagramUserModel;
 import com.adobe.aem.guides.wknd.core.models.dto.instagram.InstagramUser;
 import com.adobe.aem.guides.wknd.services.InstagramUserService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
@@ -34,12 +32,8 @@ public class InstagramUserModelImpl implements InstagramUserModel {
     InstagramUser instagramUser;
 
     @PostConstruct
-    private void init() {
+    private void init() throws JsonProcessingException {
         LOGGER.info("init InstagramFeedListImpl");
-        instagramUser = new InstagramUser();
-        Gson gson = new GsonBuilder().create();
-        JsonObject jsonObject = instagramUserService.getUserInfo("");
-        instagramUser = gson.fromJson(jsonObject, InstagramUser.class);
-        instagramUser.setProfilePictureUrl(jsonObject.getAsJsonObject("picture").getAsJsonObject("data").get("url").getAsString());
+        instagramUser = instagramUserService.getUserInfo();
     }
 }

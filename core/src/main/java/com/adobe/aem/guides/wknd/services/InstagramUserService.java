@@ -1,7 +1,8 @@
 package com.adobe.aem.guides.wknd.services;
 
-import com.google.gson.JsonObject;
+import com.adobe.aem.guides.wknd.core.models.dto.instagram.InstagramUser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface InstagramUserService {
-    JsonObject getUserInfo(String userId);
+    InstagramUser getUserInfo() throws JsonProcessingException;
 }

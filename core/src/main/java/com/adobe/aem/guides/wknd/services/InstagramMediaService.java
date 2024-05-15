@@ -1,9 +1,10 @@
 package com.adobe.aem.guides.wknd.services;
 
-import com.google.gson.JsonObject;
+import com.adobe.aem.guides.wknd.core.models.dto.instagram.InstagramPost;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface InstagramMediaService {
 
-    JsonObject getMediaById(String igMediaId);
+    InstagramPost getMediaById(String igMediaId) throws JsonProcessingException;
 
 }

@@ -1,10 +1,8 @@
 package com.adobe.aem.guides.wknd.core.models.dto.instagram;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
 public class InstagramPost {
     private String ig_id;
     private String caption;

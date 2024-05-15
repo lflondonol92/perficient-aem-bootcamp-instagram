@@ -1,72 +1,60 @@
 package com.adobe.aem.guides.wknd.services.impl;
 
-import com.adobe.aem.guides.wknd.entity.InstagramResponse;
+import com.adobe.aem.guides.wknd.core.models.dto.instagram.InstagramUser;
 import com.adobe.aem.guides.wknd.services.InstagramRequestService;
 import com.adobe.aem.guides.wknd.services.InstagramUserService;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.annotation.Inherited;
 
 @Component(service = InstagramUserService.class)
+@Designate(ocd = InstagramUserServiceImpl.Configuration.class)
+
 public class InstagramUserServiceImpl implements InstagramUserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InstagramUserServiceImpl.class);
 
-    protected static final String DEFAULT_ACCESS_TOKEN = "EAAF1vW1sZA7EBOzbyWEnVt1vrZCwYSiARfg4U7nrtKHwTnnxvm7ZA8KxeOZAHCtZCX9ZArHIiVevvAS9R6qaKkKjxpKeZAENag0aioEjywqhF4QNJZBRkJZARLprHE0zNzIFlcZCjRKs3Tjft8OiBienFUMRusDT2JAX5Xit4xeDsnFaa73c0zkJwjR5VOwaPWKBNFIT1azwZDZD";
-    protected static final String DEFAULT_IG_GRAPH_API_ENDPOINT = "https://graph.facebook.com/v19.0/";
-    protected static final String DEFAULT_IG_FIELDS = "id,name,picture";
+    protected static final String DEFAULT_IG_USER_FIELDS = "id,name,picture";
     protected static final String DEFAULT_IG_USER_ID = "10161708314639083";
+
     @Reference
     InstagramRequestService requestService;
 
-    protected List<NameValuePair> getNameValuePairs(String fieldsValue) {
-        List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair("access_token", DEFAULT_ACCESS_TOKEN));
-        nameValuePairs.add(new BasicNameValuePair("fields", fieldsValue));
+    private final ObjectMapper mapper = new ObjectMapper();
+    private String igUserFields;
+    private String igUserId;
 
-        return nameValuePairs;
+    @ObjectClassDefinition(name = "IG - User Service", description = "IG User Service Configuration")
+    @Inherited
+    protected @interface Configuration {
+
+        @AttributeDefinition(name = "Instagram User Fields") String igUserFields() default DEFAULT_IG_USER_FIELDS;
+
+        @AttributeDefinition(name = "Instagram User Fields") String igUserId() default DEFAULT_IG_USER_ID;
+
+    }
+
+    @Activate
+    private void activate(Configuration config) {
+        this.igUserFields = config.igUserFields();
+        this.igUserId = config.igUserId();
     }
 
     @Override
-    public JsonObject getUserInfo(String userId) {
-        JsonObject jsonResponse = null;
-        try {
-            final CloseableHttpClient httpClient = requestService.getConfiguredHttpClient();
-            String igUserUrl = DEFAULT_IG_GRAPH_API_ENDPOINT + DEFAULT_IG_USER_ID;
-
-            List<NameValuePair> nameValuePairs = this.getNameValuePairs(DEFAULT_IG_FIELDS);
-
-            URI uri = new URIBuilder(igUserUrl)
-                    .addParameters(nameValuePairs)
-                    .build();
-            HttpGet httpget = new HttpGet(uri);
-            HttpResponse httpResponse = httpClient.execute(httpget);
-            InstagramResponse response = new InstagramResponse(httpResponse);
-            String jsonString = response.getResponseBody();
-
-            LOG.trace(jsonString);
-            JsonElement jsonElement = new JsonParser().parse(jsonString);
-            jsonResponse = jsonElement.getAsJsonObject();
-            httpClient.close();
-
-        } catch (Exception e) {
-            LOG.error("Error occurred in getMediaById {}", e.getMessage());
-        }
-
-        return jsonResponse;
+    public InstagramUser getUserInfo() throws JsonProcessingException {
+        LOG.info("igUserId: {}", igUserId);
+        LOG.info("igUserFields: {}", igUserFields);
+        String jsonResponse = requestService.callInstagramAPI(igUserId, igUserFields);
+        LOG.info("JSON Response: {}", jsonResponse);
+        return mapper.readValue(jsonResponse, InstagramUser.class);
     }
 }
